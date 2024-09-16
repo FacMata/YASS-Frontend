@@ -32,7 +32,7 @@ jobs:
       
       - name: Build executable
         run: |
-            pyinstaller --onefile --distpath dist/YASS-Frontend-${{ matrix.os }}-${{ matrix.arch }} main.py
+            pyinstaller --onefile --distpath dist/YASS-Frontend-${{ matrix.os }}-${{ matrix.arch }} --name YASS-Frontend-${{ matrix.os }}-${{ matrix.arch }} main.py
 
       - name: Upload binaries as artifact
         uses: actions/upload-artifact@v4  # Updated to v4
@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-release-asset@v1  # Updated to v2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts
+          asset_path: ./artifacts/YASS-Frontend-linux-amd64/YASS-Frontend-linux-amd64
           asset_name: YASS-Linux-AMD64
           asset_content_type: application/octet-stream
 
@@ -91,6 +91,6 @@ jobs:
         uses: actions/upload-release-asset@v1  # Updated to v2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts
+          asset_path: ./artifacts/YASS-Frontend-linux-arm64/YASS-Frontend-linux-arm64
           asset_name: YASS-Linux-ARM64
           asset_content_type: application/octet-stream
