@@ -62,8 +62,8 @@ jobs:
       - name: Set release version
         id: version
         run: |
-          git fetch --tags
-          VERSION=$(git describe --tags --abbrev=0 --always)
+          SHORT_SHA=$(git rev-parse --short=7 ${{ github.sha }})
+          VERSION="dev-$SHORT_SHA"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Download artifacts
