@@ -2,8 +2,8 @@ name: Main Build and Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - dev
 
 jobs:
   build:
@@ -48,6 +48,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4  # Updated to v4
 
+      - name: Delete previous pre-release
+        run: |
+          PREV_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
+          if [ -n "$PREV_TAG" ]; then
+            gh release delete "$PREV_TAG" --yes
+          else
+            echo "No previous release found."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set release version
         id: version
         run: |
@@ -69,11 +80,11 @@ jobs:
           tag_name: ${{ env.VERSION }}
           release_name: "Release ${{ env.VERSION }}"
           body: |
-            正式发布版本:
+            预发布版本:
             - Branch: ${{ github.ref_name }}
             - Commit: ${{ github.sha }}
           draft: false
-          prerelease: false
+          prerelease: true
 
       - name: Upload Linux-amd64 binary to Release
         env:
@@ -82,7 +93,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./artifacts/YASS-Frontend-linux-amd64/YASS-Frontend-linux-amd64
-          asset_name: YASS-Frontend-Linux-AMD64
+          asset_name: YASS-Frontend-Linux-AMD64-Dev
           asset_content_type: application/octet-stream
 
       - name: Upload Linux-arm64 binary to Release
@@ -92,5 +103,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./artifacts/YASS-Frontend-linux-arm64/YASS-Frontend-linux-arm64
-          asset_name: YASS-Frontend-Linux-ARM64
+          asset_name: YASS-Frontend-Linux-ARM64-Dev
           asset_content_type: application/octet-stream
