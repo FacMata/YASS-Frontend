@@ -1,4 +1,4 @@
-name: Main Build and Release
+name: Dev Build and Pre-Release
 
 on:
   push:
