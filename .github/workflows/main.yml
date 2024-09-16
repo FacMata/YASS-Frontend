@@ -70,7 +70,7 @@ jobs:
           release_name: "Release ${{ env.VERSION }}"
           body: |
             正式发布版本:
-            - Branch: ${{ github.ref }}
+            - Branch: main
             - Commit: ${{ github.sha }}
           draft: false
           prerelease: false
